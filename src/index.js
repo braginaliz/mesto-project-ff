@@ -1,16 +1,18 @@
-
 // index.js
 
-import './pages/index.css'; 
-import { initialCards, createCard } from './pages/card.js';
-import { openModal, closeModal, isEscapeKey } from './pages/modal.js';
+import './pages/index.css';
+import {createCard, handleDelete, handleLike } from './pages/card.js';
+import { openModal, closeModal, handleImageClick } from './pages/modal.js';
 import avatarImg from './images/avatar.jpg';
+import initialCards from './pages/cards.js';
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const profileImageDiv = document.querySelector('.profile__image');
   profileImageDiv.style.backgroundImage = `url(${avatarImg})`;
-});
 
+  renderCards();
+});
 
 // Глобальные константы и переменные: DOM-элементы
 const profileEditButton = document.querySelector('.profile__edit-button');
@@ -27,8 +29,6 @@ const inputEditName = editPopupForm.querySelector('.popup__input_type_name');
 const inputEditDescription = editPopupForm.querySelector('.popup__input_type_description');
 const inputCardName = newCardPopupForm.querySelector('.popup__input_type_card-name');
 const inputCardLink = newCardPopupForm.querySelector('.popup__input_type_url');
-const modalImageContent = imagePopup.querySelector('.popup__image');
-const modalImageCaption = imagePopup.querySelector('.popup__caption');
 
 // Функции добавления карточек на страницу
 function renderCards() {
@@ -36,22 +36,6 @@ function renderCards() {
     const cardElement = createCard(data, handleDelete, handleLike, handleImageClick);
     cardListElement.append(cardElement);
   });
-}
-
-// Обработчики события удаления, лайка, открытия попапа изображения
-function handleDelete(cardElement) {
-  cardElement.remove();
-}
-
-function handleLike(likeButton) {
-  likeButton.classList.toggle('card__like-button_is-active');
-}
-
-function handleImageClick(event, data) {
-  modalImageContent.src = data.link;
-  modalImageContent.alt = data.name;
-  modalImageCaption.textContent = data.name;
-  openModal(imagePopup);
 }
 
 // Обработчики открытия и закрытия попапов
@@ -79,30 +63,4 @@ editPopupForm.addEventListener('submit', (evt) => {
 
 profileAddButton.addEventListener('click', () => {
   openModal(newCardPopup);
-});
-
-// Закрытие попапов по клику на оверлей или крестику, а также по нажатию на Escape
-function closeAnyModal(event) {
-  if (event.target.classList.contains('popup')) {
-    closeModal(event.target);
-  }
-  if (event.target.classList.contains('popup__close')) {
-    closeModal(event.target.closest('.popup'));
-  }
-}
-
-document.addEventListener('click', closeAnyModal);
-
-document.addEventListener('keydown', (evt) => {
-  if (isEscapeKey(evt)) {
-    const openedPopup = document.querySelector('.popup_is-opened');
-    if (openedPopup) {
-      closeModal(openedPopup);
-    }
-  }
-});
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-  renderCards();
 });

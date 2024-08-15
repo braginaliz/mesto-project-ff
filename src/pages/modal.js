@@ -1,12 +1,35 @@
 // modal.js
-export function openModal(modal) {
+
+function isEscapeKey(evt) {
+    return evt.key === 'Escape';
+  }
+  
+  function handleEscapeKey(evt) {
+    if (isEscapeKey(evt)) {
+      const openedPopup = document.querySelector('.popup_is-opened');
+      if (openedPopup) {
+        closeModal(openedPopup);
+      }
+    }
+  }
+  
+  function handleOverlayClick(evt) {
+    if (evt.target.classList.contains('popup')) {
+      closeModal(evt.target);
+    }
+    if (evt.target.classList.contains('popup__close')) {
+      closeModal(evt.target.closest('.popup'));
+    }
+  }
+  
+  export function openModal(modal) {
     modal.classList.add('popup_is-opened');
+    document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener('click', handleOverlayClick);
   }
   
   export function closeModal(modal) {
     modal.classList.remove('popup_is-opened');
-  }
-  
-  export function isEscapeKey(evt) {
-    return evt.key === 'Escape';
+    document.removeEventListener('keydown', handleEscapeKey);
+    document.removeEventListener('click', handleOverlayClick);
   }
