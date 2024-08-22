@@ -906,28 +906,29 @@ template {
 }
 
 .popup__button:disabled {
-  /* Задаем стиль неактивной кнопки */
-  width: 358px;
-  height: 50.15px;
-  top: 293px;
-  left: 107px;
-  gap: 0;
-  border-radius: 2px 0 0 0;
   border: 1px 0 0 0;
   opacity: 0.2;
   cursor: not-allowed;
-  background: transparent; /* Черный фон */
+  background: transparent; 
   color: rgba(0, 0, 0, 1);
   ;
 }
 
-.error {
-  color: rgba(255, 0, 0, 1);
+/* styles.css */
+
+.popup__error_visible {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  text-align: left;
+  color: #FF0000;
 }
 
-.invalid {
-  border-color: rgba(255, 0, 0, 1);
+.popup__input_type_error {
+  border-color: #FF0000;
 }
+
 
 @media screen and (max-width: 568px) {
   .popup__button {
