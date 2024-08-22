@@ -8,34 +8,69 @@ const config = {
 
 const handleResponse = (res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
 
+const handleError = (err) => {
+    console.error(err);
+};
+
 export const getUserInfo = () => {
     return fetch(`${config.baseUrl}/users/me`, {
-        headers: config.headers
+        headers: config.headers,
     })
-    .then(handleResponse);
+    .then(handleResponse)
+    .catch(handleError);
 };
 
 export const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
-        headers: config.headers
+        headers: config.headers,
     })
-    .then(handleResponse);
+    .then(handleResponse)
+    .catch(handleError);
 };
 
 export const updateUserInfo = (data) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
         headers: config.headers,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     })
-    .then(handleResponse);
+    .then(handleResponse)
+    .catch(handleError);
 };
 
 export const addNewCard = (data) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
         headers: config.headers,
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     })
-    .then(handleResponse);
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+export const deleteCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers,
+    })
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+export const likeCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: config.headers,
+    })
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+export const unlikeCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers,
+    })
+    .then(handleResponse)
+    .catch(handleError);
 };

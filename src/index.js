@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { createCard, handleDelete, handleLike } from './pages/card.js';
 import { openModal, closeModal, handleImageClick } from './pages/modal.js';
-import { getUserInfo, getInitialCards, updateUserInfo, addNewCard } from './pages/api.js';
+import { getUserInfo, getInitialCards, updateUserInfo, addNewCard, deleteCard, likeCard, unlikeCard } from './pages/api.js';
 import avatarImg from './images/avatar.jpg'; 
 import './pages/validation.js';
 
