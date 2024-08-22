@@ -895,6 +895,40 @@ template {
   cursor: pointer;
 }
 
+.popup__button {
+  /* Задаем стиль активной кнопки по умолчанию */
+  width: 358px;
+  height: 50.15px;
+  border-radius: 2px;
+  opacity: 1;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.popup__button:disabled {
+  /* Задаем стиль неактивной кнопки */
+  width: 358px;
+  height: 50.15px;
+  top: 293px;
+  left: 107px;
+  gap: 0;
+  border-radius: 2px 0 0 0;
+  border: 1px 0 0 0;
+  opacity: 0.2;
+  cursor: not-allowed;
+  background: transparent; /* Черный фон */
+  color: rgba(0, 0, 0, 1);
+  ;
+}
+
+.error {
+  color: rgba(255, 0, 0, 1);
+}
+
+.invalid {
+  border-color: rgba(255, 0, 0, 1);
+}
+
 @media screen and (max-width: 568px) {
   .popup__button {
     font-size: 14px;
@@ -947,5 +981,6 @@ template {
   pointer-events: all;
   transition: visibility 0s, opacity 0.6s;
 }
+
 
 

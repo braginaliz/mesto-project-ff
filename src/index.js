@@ -5,6 +5,7 @@ import {createCard, handleDelete, handleLike } from './pages/card.js';
 import { openModal, closeModal, handleImageClick } from './pages/modal.js';
 import avatarImg from './images/avatar.jpg';
 import initialCards from './pages/cards.js';
+import './pages/validation.js';
 
 
 document.addEventListener('DOMContentLoaded', () => {
