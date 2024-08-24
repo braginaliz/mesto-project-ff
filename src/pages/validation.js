@@ -80,7 +80,19 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
                 }
             }
             break;
+            case 'avatar-link': // Добавим случай для редактирования аватара
+            if (!value) {
+                errorMessage = 'Вы пропустили это поле.';
+            } else {
+                try {
+                    new URL(value);
+                } catch {
+                    errorMessage = 'Введите адрес сайта.';
+                }
+            }
+            break;
     }
+
 
     if (errorMessage) {
         input.setCustomValidity(errorMessage);
@@ -120,3 +132,4 @@ function clearValidation(form, inputs, submitButton, inactiveButtonClass) {
     
     submitButton.disabled = true;
 }
+
