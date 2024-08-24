@@ -1,3 +1,5 @@
+//api.js
+
 const baseUrl = 'https://nomoreparties.co/v1/';
 const token = '8544872e-8d10-49db-8eda-44512f4edb01';
 const cohortId = 'wff-cohort-20';
@@ -133,37 +135,42 @@ function createCard(cardData) {
   cardElement.querySelector('.card__title').textContent = cardData.name;
   const likeButton = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
-
-  likeCount.textContent = cardData.likes.length;
-
+  
+  
   // Состояние лайка для текущего пользователя
-  if (cardData.likes.some(like => like._id === currentUser._id)) {
+  if (Array.isArray(cardData.likes) && cardData.likes.some(like => like._id === currentUser._id)) {
     likeButton.classList.add('card__like-button_active');
+
   }
+
+  if (!cardData.likes) {
+    cardData.likes = [];}
 
   likeButton.addEventListener('click', () => {
     if (likeButton.classList.contains('card__like-button_active')) {
       removeLike(cardData._id).then(updatedCard => {
         likeButton.classList.remove('card__like-button_active');
-        likeCount.textContent = updatedCard.likes.length;
+        likeCount.textContent = Array.isArray(updatedCard.likes) ? updatedCard.likes.length : 0;
       }).catch(err => {
         console.error('Ошибка при удалении лайка:', err);
       });
     } else {
       addLike(cardData._id).then(updatedCard => {
         likeButton.classList.add('card__like-button_active');
-        likeCount.textContent = updatedCard.likes.length;
+        likeCount.textContent = Array.isArray(updatedCard.likes) ? updatedCard.likes.length : 0;
       }).catch(err => {
         console.error('Ошибка при добавлении лайка:', err);
       });
     }
   });
 
-  if (cardData.owner._id === currentUser._id) {
-    const deleteButton = cardElement.querySelector('card__delete-button');
-    deleteButton.style.display = 'card__delete-button'; // Показать кнопку удаления
+  if (cardData.owner && cardData.owner._id === currentUser._id) {
+    const deleteButton = cardElement.querySelector('.card__delete-button');
+    if (deleteButton) {
+      deleteButton.style.display = 'block'; // Показать кнопку удаления
 
-    deleteButton.addEventListener('click', () => handleDeleteCard(cardData._id, cardElement));
+      deleteButton.addEventListener('click', () => handleDeleteCard(cardData._id, cardElement));
+    }
   }
 
   return cardElement;
@@ -294,3 +301,4 @@ fetchUserInfo().then(user => {
 }).catch(err => {
   console.error('Ошибка при загрузке данных пользователя:', err);
 });
+

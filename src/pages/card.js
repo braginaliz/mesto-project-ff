@@ -12,7 +12,6 @@ export function createCard(data, handleDelete, handleLike, handleImageClick) {
   cardImage.src = data.link;
   cardImage.alt = data.name;
   cardTitle.textContent = data.name;
-  likeCount.textContent = data.likes.length;
 
   deleteButton.addEventListener("click", () => handleDelete(cardElement));
   likeButton.addEventListener("click", () => handleLike(likeButton));

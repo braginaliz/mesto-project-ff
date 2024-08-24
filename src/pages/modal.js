@@ -80,3 +80,4 @@ export function handleImageClick(event, data) {
 
   openModal(imagePopup);
 }
+
