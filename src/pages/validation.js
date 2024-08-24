@@ -80,7 +80,7 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
                 }
             }
             break;
-            case 'avatar-link': // Добавим случай для редактирования аватара
+            case 'avatar-link': 
             if (!value) {
                 errorMessage = 'Вы пропустили это поле.';
             } else {
