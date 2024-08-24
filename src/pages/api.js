@@ -220,56 +220,6 @@ profileForm.addEventListener('submit', function(event) {
   });
 });
 
-function updateAvatarOnServer(avatarUrl) {
-  return fetch(`${baseUrl}${cohortId}/users/me/avatar`, {
-    method: 'PATCH',
-    headers: {
-      authorization: token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ avatar: avatarUrl })
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
-}
-
-// Логика для отправки формы обновления аватара
-const avatarEditButton = document.querySelector('.profile__avatar-edit-button');
-const avatarPopup = document.querySelector('.popup_type_edit-avatar');
-const avatarForm = avatarPopup.querySelector('.popup__form');
-const avatarInput = avatarForm.querySelector('.popup__input_type_avatar');
-const avatarSubmitButton = avatarForm.querySelector('.popup__button');
-
-// Сохраняем начальный текст кнопки
-avatarSubmitButton.dataset.initialText = avatarSubmitButton.textContent;
-
-avatarEditButton.addEventListener('click', () => {
-  openPopup(avatarPopup);
-});
-
-avatarPopup.querySelector('.popup__close').addEventListener('click', () => {
-  closePopup(avatarPopup);
-});
-
-avatarForm.addEventListener('submit', function(event) {
-  event.preventDefault();
-  setLoadingState(avatarSubmitButton, true);
-  const avatarUrl = avatarInput.value;
-
-  isValidImageUrl(avatarUrl).then(isValid => {
-    if (isValid) {
-      updateAvatarOnServer(avatarUrl).then(updatedUser => {
-        document.querySelector('.profile__image').style.backgroundImage = `url(${updatedUser.avatar})`;
-        closePopup(avatarPopup);
-      }).catch(err => {
-        console.error('Ошибка при обновлении аватара:', err);
-      }).finally(() => {
-        setLoadingState(avatarSubmitButton, false);
-      });
-    } else {
-      alert('Пожалуйста, введите корректную ссылку на изображение.');
-      setLoadingState(avatarSubmitButton, false);  // Отключаем состояние загрузки при ошибке введенного URL
-    }
-  });
-});
 
 // Основные переменные
 const closeButtons = document.querySelectorAll('.popup__close');
@@ -301,4 +251,3 @@ fetchUserInfo().then(user => {
 }).catch(err => {
   console.error('Ошибка при загрузке данных пользователя:', err);
 });
-
