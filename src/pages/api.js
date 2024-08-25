@@ -1,4 +1,4 @@
-//api.js
+// api.js
 
 const baseUrl = 'https://nomoreparties.co/v1/';
 const token = '8544872e-8d10-49db-8eda-44512f4edb01';
@@ -22,7 +22,6 @@ function fetchCards() {
   }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
 }
 
-// Функции для постановки и снятия лайка
 function addLike(cardId) {
   return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
     method: 'PUT',
@@ -116,8 +115,7 @@ cardForm.addEventListener('submit', function(event) {
   addNewCard(cardName, cardLink).then(newCard => {
     const cardElement = createCard(newCard);
     document.querySelector('.places__list').prepend(cardElement);
-    closePopup(document.querySelector('.popup_type_new-card'));
-    cardForm.reset();
+    closePopup(document.querySelector('.popup_type_new-card'), cardForm);
   }).catch(err => {
     console.error(err);
   }).finally(() => {
@@ -136,15 +134,14 @@ function createCard(cardData) {
   const likeButton = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
   
-  
-  // Состояние лайка для текущего пользователя
   if (Array.isArray(cardData.likes) && cardData.likes.some(like => like._id === currentUser._id)) {
     likeButton.classList.add('card__like-button_active');
-
   }
 
   if (!cardData.likes) {
-    cardData.likes = [];}
+    cardData.likes = [];
+  }
+  likeCount.textContent = cardData.likes.length;
 
   likeButton.addEventListener('click', () => {
     if (likeButton.classList.contains('card__like-button_active')) {
@@ -184,16 +181,21 @@ function handleDeleteCard(cardId, cardElement) {
   confirmButton.addEventListener('click', function onConfirm() {
     deleteCard(cardId).then(() => {
       cardElement.remove();
-      closePopup(confirmationPopup);
-      confirmButton.removeEventListener('click', onConfirm);
+      closePopup(confirmationPopup, null, confirmButton);
     }).catch(err => {
       console.error('Ошибка при удалении карточки:', err);
     });
   });
 }
 
-function closePopup(popup) {
+function closePopup(popup, form = null, confirmButton = null) {
   popup.classList.remove('popup_opened');
+  if (form) {
+    form.reset();
+  }
+  if (confirmButton) {
+    confirmButton.removeEventListener('click', onConfirm);
+  }
 }
 
 const profileForm = document.querySelector('.popup_type_edit .popup__form');
@@ -220,8 +222,6 @@ profileForm.addEventListener('submit', function(event) {
   });
 });
 
-
-// Основные переменные
 const closeButtons = document.querySelectorAll('.popup__close');
 
 closeButtons.forEach(btn => {
@@ -229,7 +229,7 @@ closeButtons.forEach(btn => {
     const popup = event.target.closest('.popup');
     closePopup(popup);
   });
-});
+})
 
 function isValidImageUrl(url) {
   return fetch(url, { method: 'HEAD' }).then(res => {
@@ -244,10 +244,3 @@ function isValidImageUrl(url) {
 function openPopup(popup) {
   popup.classList.add('popup_opened');
 }
-
-fetchUserInfo().then(user => {
-  currentUser = user;
-  updateUserProfile(user);
-}).catch(err => {
-  console.error('Ошибка при загрузке данных пользователя:', err);
-});
