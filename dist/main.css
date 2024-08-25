@@ -783,13 +783,15 @@ template {
 
 .card__like-container {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Изменяем на column для вертикального расположения */
+  align-items: center; /* Центрируем элементы по горизонтали */
 }
 
-.card__like-count {
-  margin-left: 8px;
-  font-size: 14px;
+.card__like-count{
+  margin-top: 4px; /* Отступ сверху для лучшего визуального восприятия */
+  font-size: 14px; /* Размер шрифта для счетчика */
 }
+
 .card__like-button_is-active {
   background: transparent url(75438e944a43e4c0b404.svg) no-repeat;
 }

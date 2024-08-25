@@ -1,19 +1,19 @@
-
+//index.js
 
 import './pages/index.css';
-import { handleDelete, handleLike } from './pages/card.js';
+// import { handleDelete, handleLike } from './pages/card.js';
 import { openModal, closeModal, handleImageClick } from './pages/modal.js';
-import avatarImg from './images/avatar.jpg';
-import initialCards from './pages/cards.js';
+// import avatarImg from './images/avatar.jpg';
+// import initialCards from './pages/cards.js';
 import './pages/validation.js';
 import './pages/api.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const profileImageDiv = document.querySelector('.profile__image');
-  profileImageDiv.style.backgroundImage = `url(${avatarImg})`;
+// document.addEventListener('DOMContentLoaded', () => {
+//   const profileImageDiv = document.querySelector('.profile__image');
+//   profileImageDiv.style.backgroundImage = `url(${avatarImg})`;
 
-  renderCards();
-});
+//   renderCards();
+// });
 
 // Глобальные константы и переменные: DOM-элементы
 const profileEditButton = document.querySelector('.profile__edit-button');
@@ -36,12 +36,12 @@ const inputCardLink = newCardPopupForm.querySelector('.popup__input_type_url');
 const inputAvatarLink = avatarEditPopupForm.querySelector('.popup__input_type_avatar-link');
 
 // Функции добавления карточек на страницу
-function renderCards() {
-  initialCards.forEach(data => {
-    const cardElement = createCard(data, handleDelete, handleLike, handleImageClick);
-    cardListElement.append(cardElement);
-  });
-}
+// function renderCards() {
+//   initialCards.forEach(data => {
+//     const cardElement = createCard(data, handleDelete, handleLike, handleImageClick);
+//     cardListElement.append(cardElement);
+//   });
+// }
 
 // Обработчики открытия и закрытия попапов
 profileEditButton.addEventListener('click', () => {
@@ -50,14 +50,14 @@ profileEditButton.addEventListener('click', () => {
   openModal(editPopup);
 });
 
-newCardPopupForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const newCardData = { name: inputCardName.value, link: inputCardLink.value };
-  const cardElement = createCard(newCardData, handleDelete, handleLike, handleImageClick);
-  cardListElement.prepend(cardElement);
-  newCardPopupForm.reset();
-  closeModal(newCardPopup);
-});
+// newCardPopupForm.addEventListener('submit', (evt) => {
+//   evt.preventDefault();
+//   const newCardData = { name: inputCardName.value, link: inputCardLink.value };
+//   const cardElement = createCard(newCardData, handleDelete, handleLike, handleImageClick);
+//   cardListElement.prepend(cardElement);
+//   newCardPopupForm.reset();
+//   closeModal(newCardPopup);
+// });
 
 editPopupForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
