@@ -11,64 +11,153 @@ function setLoadingState(button, isLoading, loadingText = 'Сохранение.
     button.textContent = loadingText;
     button.disabled = true;
   } else {
-    button.textContent = button.dataset.initialText;
+    button.textContent = button.dataset.initialText || 'Сохранить'; // Восстановление текста кнопки
     button.disabled = false;
   }
 }
 
-// API функции
-function fetchUserInfo() {
+// Получение информации о пользователе
+export function getUserInfo() {
   return fetch(`${baseUrl}${cohortId}/users/me`, {
     headers: {
-      authorization: token
+      Authorization: token,
     }
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+  .then(data => {
+    currentUser = data; // Сохраняем текущего пользователя
+    return data;
+  });
 }
 
-function fetchCards() {
+// Обновление информации о пользователе
+export function updateUserInfo(name, about) {
+  return fetch(`${baseUrl}${cohortId}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      name: name,
+      about: about,
+    })
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+}
+
+// Обновление аватара пользователя
+export function updateAvatar(avatar) {
+  return fetch(`${baseUrl}${cohortId}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      avatar: avatar,
+    })
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+}
+
+// Получение карточек
+export function getInitialCards() {
   return fetch(`${baseUrl}${cohortId}/cards`, {
     headers: {
-      authorization: token
+      Authorization: token,
     }
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 }
 
-function addLike(cardId) {
-  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
-    method: 'PUT',
-    headers: {
-      authorization: token
-    }
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
-}
-
-function removeLike(cardId) {
-  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: token
-    }
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
-}
-
-function addNewCard(name, link) {
+// Создание карточки
+export function createCard(name, link) {
   return fetch(`${baseUrl}${cohortId}/cards`, {
     method: 'POST',
     headers: {
-      authorization: token,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: token,
     },
-    body: JSON.stringify({ name, link })
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+    body: JSON.stringify({
+      name: name,
+      link: link,
+    })
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 }
 
-function deleteCard(cardId) {
+// Удаление карточки
+export function deleteCard(cardId) {
   return fetch(`${baseUrl}${cohortId}/cards/${cardId}`, {
     method: 'DELETE',
     headers: {
-      authorization: token
+      Authorization: token,
     }
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+}
+
+// Поставить лайк карточке
+export function likeCard(cardId) {
+  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+}
+
+// Убрать лайк с карточки
+export function dislikeCard(cardId) {
+  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    }
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 }
 
 // Функции работы с DOM
@@ -78,7 +167,7 @@ function updateUserProfile(user) {
   document.querySelector('.profile__image').style.backgroundImage = `url(${user.avatar})`;
 }
 
-function createCard(cardData) {
+function createCardElement(cardData) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
 
@@ -86,43 +175,36 @@ function createCard(cardData) {
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
   cardElement.querySelector('.card__title').textContent = cardData.name;
+
   const likeButton = cardElement.querySelector('.card__like-button');
   const likeCount = cardElement.querySelector('.card__like-count');
+
+  // Открытие попапа с изображением при клике на картинку
+  cardImage.addEventListener('click', () => {
+    openImagePopup(cardData.link, cardData.name);
+  });
 
   if (Array.isArray(cardData.likes) && cardData.likes.some(like => like._id === currentUser._id)) {
     likeButton.classList.add('card__like-button_active');
   }
 
-  if (!cardData.likes) {
-    cardData.likes = [];
-  }
-  likeCount.textContent = cardData.likes.length;
+  likeCount.textContent = cardData.likes ? cardData.likes.length : 0;
 
   likeButton.addEventListener('click', () => {
-    if (likeButton.classList.contains('card__like-button_active')) {
-      removeLike(cardData._id).then(updatedCard => {
-        likeButton.classList.remove('card__like-button_active');
-        likeCount.textContent = Array.isArray(updatedCard.likes) ? updatedCard.likes.length : 0;
-      }).catch(err => {
-        console.error('Ошибка при удалении лайка:', err);
-      });
-    } else {
-      addLike(cardData._id).then(updatedCard => {
-        likeButton.classList.add('card__like-button_active');
-        likeCount.textContent = Array.isArray(updatedCard.likes) ? updatedCard.likes.length : 0;
-      }).catch(err => {
-        console.error('Ошибка при добавлении лайка:', err);
-      });
-    }
+    const action = likeButton.classList.contains('card__like-button_active') ? dislikeCard : likeCard;
+    action(cardData._id).then(updatedCard => {
+      likeButton.classList.toggle('card__like-button_active');
+      likeCount.textContent = updatedCard.likes.length;
+    }).catch(err => {
+      console.error('Ошибка при работе с лайком:', err);
+    });
   });
 
   if (cardData.owner && cardData.owner._id === currentUser._id) {
     const deleteButton = cardElement.querySelector('.card__delete-button');
-    if (deleteButton) {
-      deleteButton.style.display = 'block'; // Показать кнопку удаления
+    deleteButton.style.display = 'block';
 
-      deleteButton.addEventListener('click', () => handleDeleteCard(cardData._id, cardElement));
-    }
+    deleteButton.addEventListener('click', () => handleDeleteCard(cardData._id, cardElement));
   }
 
   return cardElement;
@@ -137,128 +219,106 @@ function handleDeleteCard(cardId, cardElement) {
 }
 
 function closePopup(popup, form = null) {
-  popup.classList.remove('popup_opened');
-  if (form) {
-    form.reset();
-  }
+  popup.classList.remove('popup_is-opened');
+  if (form) form.reset();
 }
 
 function openPopup(popup) {
-  popup.classList.add('popup_opened');
+  popup.classList.add('popup_is-opened');
 }
 
-// Работа с формами
+// Функция для открытия попапа с изображением
+function openImagePopup(imageSrc, imageAlt) {
+  const imagePopup = document.querySelector('.popup_type_image');
+  const popupImage = imagePopup.querySelector('.popup__image');
+  const popupCaption = imagePopup.querySelector('.popup__caption');
+
+  popupImage.src = imageSrc;
+  popupImage.alt = imageAlt;
+  popupCaption.textContent = imageAlt;
+
+  openPopup(imagePopup);
+}
+
+// Загрузка данных пользователя и карточек
+getUserInfo().then(user => {
+  currentUser = user;
+  updateUserProfile(user);
+  return getInitialCards();
+}).then(cards => {
+  cards.forEach(cardData => {
+    const cardElement = createCardElement(cardData);
+    document.querySelector('.places__list').appendChild(cardElement);
+  });
+}).catch(err => {
+  console.error('Ошибка при загрузке данных:', err);
+});
+
+// Обработчики форм
 const cardForm = document.querySelector('.popup_type_new-card .popup__form');
-const cardNameInput = cardForm.querySelector('.popup__input_type_card-name');
-const cardLinkInput = cardForm.querySelector('.popup__input_type_url');
-const cardSubmitButton = cardForm.querySelector('.popup__button');
+const profileForm = document.querySelector('.popup_type_edit .popup__form');
+const avatarEditPopupForm = document.forms['edit-avatar'];
 
-// Сохраняем начальный текст кнопки
-cardSubmitButton.dataset.initialText = cardSubmitButton.textContent;
-
-cardForm.addEventListener('submit', function(event) {
+// Обработчик формы карточки
+cardForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  setLoadingState(cardSubmitButton, true);
-  const cardName = cardNameInput.value;
-  const cardLink = cardLinkInput.value;
+  setLoadingState(cardForm.querySelector('.popup__button'), true);
+  const cardName = cardForm.querySelector('.popup__input_type_card-name').value;
+  const cardLink = cardForm.querySelector('.popup__input_type_url').value;
 
-  addNewCard(cardName, cardLink).then(newCard => {
-    const cardElement = createCard(newCard);
+  createCard(cardName, cardLink).then(newCard => {
+    const cardElement = createCardElement(newCard);
     document.querySelector('.places__list').prepend(cardElement);
-    closePopup(document.querySelector('.popup_type_new-card'), cardForm);
+    closePopup(cardForm.closest('.popup'), cardForm);
   }).catch(err => {
     console.error(err);
   }).finally(() => {
-    setLoadingState(cardSubmitButton, false);
+    setLoadingState(cardForm.querySelector('.popup__button'), false);
   });
 });
 
-// Функции профиля
-const profileForm = document.querySelector('.popup_type_edit .popup__form');
-const nameInput = profileForm.querySelector('.popup__input_type_name');
-const aboutInput = profileForm.querySelector('.popup__input_type_description');
-const profileSubmitButton = profileForm.querySelector('.popup__button');
-
-// Сохраняем начальный текст кнопки
-profileSubmitButton.dataset.initialText = profileSubmitButton.textContent;
-
+// Обработчик формы профиля
 profileForm.addEventListener('submit', function(event) {
   event.preventDefault();
-  setLoadingState(profileSubmitButton, true);
-  const name = nameInput.value;
-  const about = aboutInput.value;
+  setLoadingState(profileForm.querySelector('.popup__button'), true);
+  const name = profileForm.querySelector('.popup__input_type_name').value;
+  const about = profileForm.querySelector('.popup__input_type_description').value;
 
-  updateUserProfileOnServer(name, about).then(updatedUser => {
+  updateUserInfo(name, about).then(updatedUser => {
     updateUserProfile(updatedUser);
     closePopup(profileForm.closest('.popup'));
   }).catch(err => {
     console.error('Ошибка при обновлении профиля:', err);
   }).finally(() => {
-    setLoadingState(profileSubmitButton, false);
+    setLoadingState(profileForm.querySelector('.popup__button'), false);
   });
 });
 
-const closeButtons = document.querySelectorAll('.popup__close');
-closeButtons.forEach(btn => {
-  btn.addEventListener('click', (event) => {
-    const popup = event.target.closest('.popup');
-    closePopup(popup);
-  });
-});
+// Обработчик формы аватара
+avatarEditPopupForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+  const newAvatarLink = avatarEditPopupForm.querySelector('.popup__input_type_avatar-link').value;
 
-// Функции обновления аватара
-const avatarEditPopupForm = document.forms['edit-avatar'];
-const inputAvatarLink = avatarEditPopupForm.querySelector('.popup__input_type_avatar-link');
-const avatarEditButton = document.querySelector('.profile__avatar-edit-button');
-const avatarEditPopup = document.querySelector('.popup_type_avatar-edit');
-
-avatarEditButton.addEventListener('click', () => {
-  openPopup(avatarEditPopup);
-});
-
-// Функция для обновления аватара на сервере
-function updateAvatarOnServer(avatarUrl) {
-  return fetch(`${baseUrl}${cohortId}/users/me/avatar`, {
-    method: 'PATCH',
-    headers: {
-      authorization: token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ avatar: avatarUrl })
-  }).then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
-}
-
-// Обработчик формы редактирования аватарки
-avatarEditPopupForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const newAvatarLink = inputAvatarLink.value;
-
-  setLoadingState(avatarEditPopupForm.querySelector('.popup__button'), true); // Установка состояния загрузки
-  updateAvatarOnServer(newAvatarLink)
+  setLoadingState(avatarEditPopupForm.querySelector('.popup__button'), true);
+  updateAvatar(newAvatarLink)
     .then(updatedUser => {
       const profileImageDiv = document.querySelector('.profile__image');
-      profileImageDiv.style.backgroundImage = `url(${updatedUser.avatar})`; // Обновление аватара на странице
-      avatarEditPopupForm.reset(); // Очистка формы
-      closePopup(avatarEditPopup); // Закрытие попапа
+      profileImageDiv.style.backgroundImage = `url(${updatedUser.avatar})`;
+      avatarEditPopupForm.reset();
+      closePopup(avatarEditPopupForm.closest('.popup'));
     })
     .catch(err => {
       console.error('Ошибка при обновлении аватара:', err);
     })
     .finally(() => {
-      setLoadingState(avatarEditPopupForm.querySelector('.popup__button'), false); // Сброс состояния загрузки
+      setLoadingState(avatarEditPopupForm.querySelector('.popup__button'), false);
     });
 });
 
-// Загрузка данных пользователя и карточек
-fetchUserInfo().then(user => {
-  currentUser = user;
-  updateUserProfile(user);
-  return fetchCards();
-}).then(cards => {
-  cards.forEach(cardInfo => {
-    const cardElement = createCard(cardInfo);
-    document.querySelector('.places__list').appendChild(cardElement);
+// Закрытие попапов
+document.querySelectorAll('.popup__close').forEach(btn => {
+  btn.addEventListener('click', (event) => {
+    const popup = event.target.closest('.popup');
+    closePopup(popup);
   });
-}).catch(err => {
-  console.error('Ошибка при загрузке данных:', err);
 });

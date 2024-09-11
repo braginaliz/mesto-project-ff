@@ -69,15 +69,15 @@ export function closeModal(modal) {
 
 } 
 
-export function handleImageClick(event, data) {
-  const imagePopup = document.querySelector('.popup_type_image');
-  const popupImage = imagePopup.querySelector('.popup__image');
-  const popupCaption = imagePopup.querySelector('.popup__caption');
+// export function handleImageClick(event, data) {
+//   const imagePopup = document.querySelector('.popup_type_image');
+//   const popupImage = imagePopup.querySelector('.popup__image');
+//   const popupCaption = imagePopup.querySelector('.popup__caption');
 
-  popupImage.src = data.link;
-  popupImage.alt = data.name;
-  popupCaption.textContent = data.name;
+//   popupImage.src = data.link;
+//   popupImage.alt = data.name;
+//   popupCaption.textContent = data.name;
 
-  openModal(imagePopup);
-}
+//   openModal(imagePopup);
+// }
 
