@@ -71,19 +71,6 @@ avatarEditPopupForm.addEventListener('submit', (evt) => {
   return cardElement;
 }
 
-getUserInfo().then(user => {
-  currentUser = user;
-  updateUserProfile(user);
-  return getInitialCards();
-}).then(cards => {
-  cards.forEach(cardData => {
-    const cardElement = createCardElement(cardData);
-    document.querySelector('.places__list').appendChild(cardElement);
-  });
-}).catch(err => {
-  console.error('Ошибка при загрузке данных:', err);
-});
-
 // Закрытие попапов
 document.querySelectorAll('.popup__close').forEach(btn => {
   btn.addEventListener('click', (event) => {
@@ -103,3 +90,12 @@ function openImagePopup(imageSrc, imageAlt) {
 
   openPopup(imagePopup);
 }
+
+// Закрытие попапов
+document.querySelectorAll('.popup__close').forEach(btn => {
+  btn.addEventListener('click', (event) => {
+    const popup = event.target.closest('.popup');
+    closeModal(popup);
+  });
+});
+

@@ -1018,7 +1018,6 @@ template {
   display: block;
   border-radius: 0;
 }
-
 .popup {
   font-family: 'Inter', Arial, sans-serif;
   display: flex;
@@ -1047,7 +1046,6 @@ template {
   pointer-events: all;
   transition: visibility 0s, opacity 0.6s;
 }
-
 
 
 
