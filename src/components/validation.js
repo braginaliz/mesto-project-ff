@@ -1,5 +1,3 @@
-// validation.js
-
 document.addEventListener("DOMContentLoaded", () => {
     const validationConfig = {
         formSelector: '.popup__form',
@@ -26,11 +24,8 @@ function enableValidation({ formSelector, inputSelector, submitButtonSelector, i
             });
         });
 
-        // Очистка валидации при закрытии попапа
-        const closeButton = form.closest('.popup').querySelector('.popup__close');
-        closeButton.addEventListener('click', () => {
-            clearValidation(form, inputs, submitButton, inactiveButtonClass);
-        });
+        // Вызов функции для очистки валидации при загрузке формы
+        clearValidation(form, inputs, submitButton, inactiveButtonClass);
     });
 }
 
@@ -70,17 +65,7 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
             }
             break;
         case 'link':
-            if (!value) {
-                errorMessage = 'Вы пропустили это поле.';
-            } else {
-                try {
-                    new URL(value);
-                } catch {
-                    errorMessage = 'Введите адрес сайта.';
-                }
-            }
-            break;
-            case 'avatar-link': 
+        case 'avatar-link':
             if (!value) {
                 errorMessage = 'Вы пропустили это поле.';
             } else {
@@ -92,7 +77,6 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
             }
             break;
     }
-
 
     if (errorMessage) {
         input.setCustomValidity(errorMessage);
@@ -125,11 +109,11 @@ function clearValidation(form, inputs, submitButton, inactiveButtonClass) {
     inputs.forEach(input => {
         input.setCustomValidity('');
         input.classList.remove('popup__input_type_error');
-        if (input.nextElementSibling && input.nextElementSibling.classList.contains(inactiveButtonClass)) {
-            input.nextElementSibling.remove();
+        const errorElement = input.nextElementSibling;
+        if (errorElement && errorElement.classList.contains(inactiveButtonClass)) {
+            errorElement.remove();
         }
     });
     
     submitButton.disabled = true;
 }
-
