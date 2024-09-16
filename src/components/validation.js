@@ -1,5 +1,3 @@
-//validation.js
-
 document.addEventListener("DOMContentLoaded", () => {
     const validationConfig = {
         formSelector: '.popup__form',
@@ -36,48 +34,23 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
     let errorMessage = '';
 
     const patterns = {
-        name: /^[a-zA-Zа-яёА-ЯЁ\- ]+$/,
-        description: /^[a-zA-Zа-яёА-ЯЁ\- ]+$/
+        name: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,30}$/, // Изменено для проверки длины от 2 до 30 символов
+        description: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,200}$/, // Не трогали
+        link: /^(http|https):\/\/[^ "]+$/,
+        'avatar-link': /^(http|https):\/\/[^ "]+$/
     };
 
-    switch (input.name) {
-        case 'name':
-            if (!value) {
-                errorMessage = 'Вы пропустили это поле.';
-            } else if (value.length < 2 || value.length > 40) {
-                errorMessage = `Минимальное количество символов: 2. Длина текста сейчас: ${value.length}.`;
-            } else if (!patterns.name.test(value)) {
-                errorMessage = 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.';
-            }
-            break;
-        case 'description':
-            if (!value) {
-                errorMessage = 'Вы пропустили это поле.';
-            } else if (value.length < 2 || value.length > 200) {
-                errorMessage = `Минимальное количество символов: 2. Длина текста сейчас: ${value.length}.`;
-            } else if (!patterns.description.test(value)) {
-                errorMessage = 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.';
-            }
-            break;
-        case 'place-name':
-            if (!value) {
-                errorMessage = 'Вы пропустили это поле.';
-            } else if (!patterns.name.test(value)) {
-                errorMessage = 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.';
-            }
-            break;
-        case 'link':
-        case 'avatar-link':
-            if (!value) {
-                errorMessage = 'Вы пропустили это поле.';
-            } else {
-                try {
-                    new URL(value);
-                } catch {
-                    errorMessage = 'Введите адрес сайта.';
-                }
-            }
-            break;
+    // Проверки для разных инпутов
+    if (!value) {
+        errorMessage = input.dataset.errorRequired || 'Вы пропустили это поле.';
+    } else if (input.name === 'place-name' && (value.length < 2 || value.length > 30)) {
+        errorMessage = input.dataset.errorLength || `Длина названия должна быть от 2 до 30 символов. Текущая длина: ${value.length}.`;
+    } else if ((input.name === 'name' || input.name === 'description') && (value.length < 2 || value.length > (input.name === 'name' ? 40 : 200))) {
+        errorMessage = input.dataset.errorLength || `Минимальное количество символов: 2. Длина текста сейчас: ${value.length}.`;
+    } else if ((input.name === 'name' || input.name === 'description') && !patterns[input.name].test(value)) {
+        errorMessage = input.dataset.errorPattern || 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы.';
+    } else if ((input.name === 'link' || input.name === 'avatar-link') && !patterns[input.name].test(value)) {
+        errorMessage = input.dataset.errorUrl || 'Введите адрес сайта.';
     }
 
     if (errorMessage) {
@@ -93,13 +66,9 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
 }
 
 function showError(input, message, errorClass) {
-    let errorElement = input.nextElementSibling;
-    if (!errorElement || !errorElement.classList.contains(errorClass)) {
-        errorElement = document.createElement('span');
-        errorElement.classList.add(errorClass);
-        input.parentNode.insertBefore(errorElement, input.nextSibling);
-    }
+    const errorElement = input.nextElementSibling;
     errorElement.textContent = message;
+    errorElement.classList.toggle(errorClass, !!message);
 }
 
 function toggleSubmitButtonState(inputs, submitButton) {
@@ -112,10 +81,18 @@ function clearValidation(form, inputs, submitButton, inactiveButtonClass) {
         input.setCustomValidity('');
         input.classList.remove('popup__input_type_error');
         const errorElement = input.nextElementSibling;
-        if (errorElement && errorElement.classList.contains(inactiveButtonClass)) {
-            errorElement.remove();
-        }
+        errorElement.textContent = '';
+        errorElement.classList.remove('popup__error_visible');
     });
-    
+
     submitButton.disabled = true;
+}
+
+function isValidURL(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;  
+    }
 }
