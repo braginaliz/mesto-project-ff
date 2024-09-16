@@ -859,24 +859,18 @@ template {
   }
 }
 
-.popup__content_content_image {
-  max-width: 75vw;
-  max-height: 75vh;
-  height: auto;
-  width: auto;
+.popup_type_image .popup__content {
+  max-width: 75vw; 
+  max-height: 75vh; 
+  background: rgba(0, 0, 0, 0.8); 
+  border-radius: 8px; 
   display: flex;
-  background: transparent;
-  -webkit-background-size: cover;
-  background-size: cover;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  padding: 0;
-  object-fit: cover;
-  border-radius: 0;
-  border: none;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  padding: 0; 
+  border: none; 
 }
-
 .popup__close {
   width: 35px;
   height: 35px;
@@ -963,7 +957,6 @@ template {
 }
 
 .popup__button {
-  /* Задаем стиль активной кнопки по умолчанию */
   width: 358px;
   height: 50.15px;
   border-radius: 2px;
@@ -1014,13 +1007,14 @@ template {
   margin: 0;
 }
 
+
+
+
 .popup__image {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: cover;
-  display: block;
-  border-radius: 0;
-  border: none;
+  max-height: 70vh;
+  max-width: 100%; 
+  object-fit: cover; 
+  border-radius: 0; 
 }
 .popup {
   font-family: 'Inter', Arial, sans-serif;

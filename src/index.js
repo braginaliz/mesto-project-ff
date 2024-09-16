@@ -1,3 +1,5 @@
+//index.js
+
 import './pages/index.css';
 import './components/validation.js';
 import { openModal, closeModal } from './components/modal.js';
@@ -31,6 +33,10 @@ profileEditButton.addEventListener('click', () => {
 // Обработка отправки формы редактирования профиля
 profileForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
+  const saveButton = profileForm.querySelector('.popup__button');
+  saveButton.textContent = 'Сохранение...';
+  saveButton.disabled = true; // Отключаем кнопку
+
   const name = profileForm.name.value;
   const about = profileForm.description.value;
 
@@ -40,7 +46,11 @@ profileForm.addEventListener('submit', (evt) => {
       profileDescription.textContent = updatedUser.about;
       closeModal(editPopup);
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error(err))
+    .finally(() => {
+      saveButton.textContent = 'Сохранить'; // Восстанавливаем текст кнопки
+      saveButton.disabled = false; // Включаем кнопку
+    });
 });
 
 // Открытие попапа добавления новой карточки
@@ -51,6 +61,10 @@ profileAddButton.addEventListener('click', () => {
 // Обработка отправки формы новой карточки
 cardForm.addEventListener('submit', function (evt) {
   evt.preventDefault();
+  const saveButton = cardForm.querySelector('.popup__button');
+  saveButton.textContent = 'Сохранение...';
+  saveButton.disabled = true; // Отключаем кнопку
+
   const name = cardForm.querySelector('.popup__input_type_card-name').value;
   const link = cardForm.querySelector('.popup__input_type_url').value;
 
@@ -60,7 +74,11 @@ cardForm.addEventListener('submit', function (evt) {
       cardListElement.prepend(cardElement);
       closeModal(newCard.closest('.popup'));
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error(err))
+    .finally(() => {
+      saveButton.textContent = 'Сохранить'; // Восстанавливаем текст кнопки
+      saveButton.disabled = false; // Включаем кнопку
+    });
 });
 
 // Открытие попапа редактирования аватара
@@ -71,6 +89,10 @@ avatarEditButton.addEventListener('click', () => {
 // Обработка отправки формы редактирования аватара
 avatarEditPopupForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
+  const saveButton = avatarEditPopupForm.querySelector('.popup__button');
+  saveButton.textContent = 'Сохранение...';
+  saveButton.disabled = true; // Отключаем кнопку
+
   const avatarLink = avatarEditPopupForm.elements['avatar-link'].value;
 
   updateAvatar(avatarLink)
@@ -78,7 +100,11 @@ avatarEditPopupForm.addEventListener('submit', (evt) => {
       profileImage.style.backgroundImage = `url(${updatedUser.avatar})`;
       closeModal(avatarEditPopup);
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error(err))
+    .finally(() => {
+      saveButton.textContent = 'Сохранить'; // Восстанавливаем текст кнопки
+      saveButton.disabled = false; // Включаем кнопку
+    });
 });
 
 // Создание карточки элемента

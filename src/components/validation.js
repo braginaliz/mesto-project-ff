@@ -1,3 +1,5 @@
+//validation.js
+
 document.addEventListener("DOMContentLoaded", () => {
     const validationConfig = {
         formSelector: '.popup__form',

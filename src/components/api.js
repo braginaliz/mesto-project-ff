@@ -1,3 +1,4 @@
+//api.js
 const baseUrl = 'https://nomoreparties.co/v1/';
 const token = '8544872e-8d10-49db-8eda-44512f4edb01';
 const cohortId = 'wff-cohort-20';
