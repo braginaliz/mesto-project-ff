@@ -24,7 +24,7 @@ function enableValidation({ formSelector, inputSelector, submitButtonSelector, i
             });
         });
 
-        // Вызов функции для очистки валидации при загрузке формы
+
         clearValidation(form, inputs, submitButton, inactiveButtonClass);
     });
 }
@@ -34,8 +34,8 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
     let errorMessage = '';
 
     const patterns = {
-        name: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,30}$/, // Изменено для проверки длины от 2 до 30 символов
-        description: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,200}$/, // Не трогали
+        name: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,30}$/, 
+        description: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,200}$/, 
         link: /^(http|https):\/\/[^ "]+$/,
         'avatar-link': /^(http|https):\/\/[^ "]+$/
     };

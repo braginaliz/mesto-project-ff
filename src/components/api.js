@@ -1,31 +1,29 @@
 //api.js
-const baseUrl = 'https://nomoreparties.co/v1/';
-const token = '8544872e-8d10-49db-8eda-44512f4edb01';
+
+import { config } from '../utils/config.js';
+
 const cohortId = 'wff-cohort-20';
 
 export function getUserInfo() {
-  return fetch(`${baseUrl}${cohortId}/users/me`, {
+  return fetch(`${config.baseUrl}${cohortId}/users/me`, {
     headers: {
-      Authorization: token,
+      Authorization: config.headers.authorization,
     }
   }).then(res => checkResponse(res));
 }
 
 export function getInitialCards() {
-  return fetch(`${baseUrl}${cohortId}/cards`, {
+  return fetch(`${config.baseUrl}${cohortId}/cards`, {
     headers: {
-      Authorization: token,
+      Authorization: config.headers.authorization,
     }
   }).then(res => checkResponse(res));
 }
 
 export function updateUserInfo(name, about) {
-  return fetch(`${baseUrl}${cohortId}/users/me`, {
+  return fetch(`${config.baseUrl}${cohortId}/users/me`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name,
       about,
@@ -34,12 +32,9 @@ export function updateUserInfo(name, about) {
 }
 
 export function updateAvatar(avatar) {
-  return fetch(`${baseUrl}${cohortId}/users/me/avatar`, {
+  return fetch(`${config.baseUrl}${cohortId}/users/me/avatar`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: config.headers,
     body: JSON.stringify({
       avatar,
     })
@@ -47,12 +42,9 @@ export function updateAvatar(avatar) {
 }
 
 export function createCard(name, link) {
-  return fetch(`${baseUrl}${cohortId}/cards`, {
+  return fetch(`${config.baseUrl}${cohortId}/cards`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name,
       link,
@@ -61,28 +53,28 @@ export function createCard(name, link) {
 }
 
 export function deleteCard(cardId) {
-  return fetch(`${baseUrl}${cohortId}/cards/${cardId}`, {
+  return fetch(`${config.baseUrl}${cohortId}/cards/${cardId}`, {
     method: 'DELETE',
     headers: {
-      Authorization: token,
+      Authorization: config.headers.authorization,
     }
   }).then(res => checkResponse(res));
 }
 
 export function likeCard(cardId) {
-  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
+  return fetch(`${config.baseUrl}${cohortId}/cards/likes/${cardId}`, {
     method: 'PUT',
     headers: {
-      Authorization: token,
+      Authorization: config.headers.authorization,
     }
   }).then(res => checkResponse(res));
 }
 
 export function dislikeCard(cardId) {
-  return fetch(`${baseUrl}${cohortId}/cards/likes/${cardId}`, {
+  return fetch(`${config.baseUrl}${cohortId}/cards/likes/${cardId}`, {
     method: 'DELETE',
     headers: {
-      Authorization: token,
+      Authorization: config.headers.authorization,
     }
   }).then(res => checkResponse(res));
 }
