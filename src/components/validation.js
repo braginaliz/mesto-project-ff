@@ -80,16 +80,17 @@ function toggleSubmitButtonState(inputs, submitButton, settings) {
     submitButton.disabled = !isFormValid; 
 }
 
-function clearValidation(form, inputs, submitButton, inactiveButtonClass) {
+
+function clearValidation(form, inputs, submitButton, settings) {
     inputs.forEach(input => {
         input.setCustomValidity('');
-        input.classList.remove('popup__input_type_error');
+        input.classList.remove(settings.inputErrorClass);
         const errorElement = input.nextElementSibling;
         errorElement.textContent = '';
-        errorElement.classList.remove('popup__error_visible');
+        errorElement.classList.remove(settings.errorClass);
     });
 
-    submitButton.disabled = true;
+    submitButton.disabled = true; 
 }
 
 function isValidURL(string) {
