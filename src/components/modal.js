@@ -35,10 +35,10 @@ export function openImagePopup(link, name) {
   const captionElement = imagePopup.querySelector('.popup__caption');
 
   imageElement.src = link;
-  imageElement.alt = name;  // Добавление alt для доступности
+  imageElement.alt = name;  
   captionElement.textContent = name;
 
-  openModal(imagePopup);  // Открыть попап с изображением
+  openModal(imagePopup);  
 }
 
 export { openModal, closeModal };

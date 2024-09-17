@@ -2,7 +2,7 @@ import './pages/index.css';
 import './components/validation.js';
 import { openModal, closeModal } from './components/modal.js';
 import { getUserInfo, getInitialCards, updateUserInfo, updateAvatar, createCard } from './components/api.js';
-import { createCardElement } from './components/card.js'; // Импортируем функцию
+import { createCardElement } from './components/card.js'; 
 
 // Константы
 const cardForm = document.querySelector('.popup_type_new-card .popup__form');
@@ -115,7 +115,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileImage.style.backgroundImage = `url(${user.avatar})`;
 
     cards.forEach(cardData => {
-      const cardElement = createCardElement(cardData, currentUser); // Передаем currentUser
+      const cardElement = createCardElement(cardData, currentUser); 
       cardListElement.appendChild(cardElement);
     });
   })

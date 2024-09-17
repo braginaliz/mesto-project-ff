@@ -1,3 +1,5 @@
+//card.js
+
 import { deleteCard, likeCard, dislikeCard } from './api.js';
 import { openImagePopup } from './modal.js';
 
