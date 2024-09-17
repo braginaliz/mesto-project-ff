@@ -18,14 +18,13 @@ function enableValidation({ formSelector, inputSelector, submitButtonSelector, i
         const inputs = Array.from(form.querySelectorAll(inputSelector));
         const submitButton = form.querySelector(submitButtonSelector);
 
+        toggleSubmitButtonState(inputs, submitButton, { inactiveButtonClass });
+
         inputs.forEach(input => {
             input.addEventListener('input', () => {
                 validateInput(input, inputs, submitButton, inputErrorClass, errorClass);
             });
         });
-
-
-        clearValidation(form, inputs, submitButton, inactiveButtonClass);
     });
 }
 
@@ -34,13 +33,13 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
     let errorMessage = '';
 
     const patterns = {
-        name: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,30}$/, 
-        description: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,200}$/, 
+        name: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,30}$/,
+        description: /^[a-zA-Zа-яёА-ЯЁ\- ]{2,200}$/,
         link: /^(http|https):\/\/[^ "]+$/,
         'avatar-link': /^(http|https):\/\/[^ "]+$/
     };
 
-    // Проверки для разных инпутов
+    // Проверки для различных инпутов
     if (!value) {
         errorMessage = input.dataset.errorRequired || 'Вы пропустили это поле.';
     } else if (input.name === 'place-name' && (value.length < 2 || value.length > 30)) {
@@ -62,7 +61,7 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
     }
 
     showError(input, errorMessage, errorClass);
-    toggleSubmitButtonState(inputs, submitButton);
+    toggleSubmitButtonState(inputs, submitButton, { inputErrorClass });
 }
 
 function showError(input, message, errorClass) {
@@ -71,15 +70,14 @@ function showError(input, message, errorClass) {
     errorElement.classList.toggle(errorClass, !!message);
 }
 
-
-function toggleSubmitButtonState(inputs, submitButton, settings) { 
+function toggleSubmitButtonState(inputs, submitButton, settings) {
     const isFormValid = inputs.every(input => 
-        input.checkValidity() && 
+        input.checkValidity() &&
         !input.classList.contains(settings.inputErrorClass)
-    ); 
-    submitButton.disabled = !isFormValid; 
+    );
+    submitButton.disabled = !isFormValid;
+    submitButton.classList.toggle(settings.inactiveButtonClass, !isFormValid);
 }
-
 
 function clearValidation(form, inputs, submitButton, settings) {
     inputs.forEach(input => {
@@ -90,7 +88,7 @@ function clearValidation(form, inputs, submitButton, settings) {
         errorElement.classList.remove(settings.errorClass);
     });
 
-    submitButton.disabled = true; 
+    toggleSubmitButtonState(inputs, submitButton, settings);
 }
 
 function isValidURL(string) {
@@ -98,6 +96,6 @@ function isValidURL(string) {
         new URL(string);
         return true;
     } catch (_) {
-        return false;  
+        return false;
     }
 }

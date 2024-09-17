@@ -2,6 +2,7 @@
 
 import './pages/index.css';
 import './components/validation.js';
+import './components/card.js';
 import { openModal, closeModal } from './components/modal.js';
 import { getUserInfo, getInitialCards, updateUserInfo, updateAvatar, createCard, deleteCard, likeCard, dislikeCard } from './components/api.js';
 
