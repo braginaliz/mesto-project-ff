@@ -71,9 +71,13 @@ function showError(input, message, errorClass) {
     errorElement.classList.toggle(errorClass, !!message);
 }
 
-function toggleSubmitButtonState(inputs, submitButton) {
-    const isFormValid = inputs.every(input => input.checkValidity() && !input.classList.contains('popup__input_type_error'));
-    submitButton.disabled = !isFormValid;
+
+function toggleSubmitButtonState(inputs, submitButton, settings) { 
+    const isFormValid = inputs.every(input => 
+        input.checkValidity() && 
+        !input.classList.contains(settings.inputErrorClass)
+    ); 
+    submitButton.disabled = !isFormValid; 
 }
 
 function clearValidation(form, inputs, submitButton, inactiveButtonClass) {
