@@ -20,14 +20,15 @@ const cardListElement = document.querySelector('.places__list');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
-
+const imageElement = imagePopup.querySelector('.popup__image'); 
+const captionElement = imagePopup.querySelector('.popup__caption');
 let currentUser = null;
 
 // Открытие попапа редактирования профиля
 profileEditButton.addEventListener('click', () => {
   profileForm.name.value = profileTitle.textContent;
   profileForm.description.value = profileDescription.textContent;
-  clearValidation(profileForm, Array.from(profileForm.querySelectorAll('.popup__input')), profileForm.querySelector('.popup__button'), 'popup__button_disabled');
+  clearValidation(profileForm, Array.from(profileForm.querySelectorAll('.popup__input')), profileForm.querySelector('.popup__button'), 'popup__button_disabled', 'popup__input_type_error', 'popup__error_visible');
   openModal(editPopup);
 });
 
@@ -56,7 +57,7 @@ profileForm.addEventListener('submit', (evt) => {
 
 // Открытие попапа добавления новой карточки
 profileAddButton.addEventListener('click', () => {
-  clearValidation(cardForm, Array.from(cardForm.querySelectorAll('.popup__input')), cardForm.querySelector('.popup__button'), 'popup__button_disabled');
+  clearValidation(cardForm, Array.from(cardForm.querySelectorAll('.popup__input')), cardForm.querySelector('.popup__button'), 'popup__button_disabled', 'popup__input_type_error', 'popup__error_visible');
   openModal(newCardPopup);
 });
 
@@ -74,7 +75,7 @@ cardForm.addEventListener('submit', (evt) => {
     .then(newCard => {
       const cardElement = createCardElement(newCard, currentUser);
       cardListElement.prepend(cardElement);
-      clearValidation(cardForm, Array.from(cardForm.querySelectorAll('.popup__input')), cardForm.querySelector('.popup__button'), 'popup__button_disabled'); // Очищаем инпуты после создания карточки
+      clearValidation(cardForm, Array.from(cardForm.querySelectorAll('.popup__input')), cardForm.querySelector('.popup__button'), 'popup__button_disabled', 'popup__input_type_error', 'popup__error_visible'); // Очищаем инпуты после создания карточки
       closeModal(newCardPopup); 
     })
     .catch(err => console.error(err))
@@ -86,7 +87,7 @@ cardForm.addEventListener('submit', (evt) => {
 
 // Открытие попапа редактирования аватара
 avatarEditButton.addEventListener('click', () => {
-  clearValidation(avatarEditPopupForm, Array.from(avatarEditPopupForm.querySelectorAll('.popup__input')), avatarEditPopupForm.querySelector('.popup__button'), 'popup__button_disabled');
+  clearValidation(avatarEditPopupForm, Array.from(avatarEditPopupForm.querySelectorAll('.popup__input')), avatarEditPopupForm.querySelector('.popup__button'), 'popup__button_disabled', 'popup__input_type_error', 'popup__error_visible');
   openModal(avatarEditPopup);
 });
 
@@ -113,14 +114,9 @@ avatarEditPopupForm.addEventListener('submit', (evt) => {
 
 // Функция открытия попапа с изображением
 export function openImagePopup(link, name) { 
-  const imagePopup = document.querySelector('.popup_type_image'); 
-  const imageElement = imagePopup.querySelector('.popup__image'); 
-  const captionElement = imagePopup.querySelector('.popup__caption'); 
-
   imageElement.src = link; 
   imageElement.alt = name;   
   captionElement.textContent = name; 
-
   openModal(imagePopup);   
 } 
 

@@ -1,3 +1,4 @@
+// validation.js 
 document.addEventListener("DOMContentLoaded", () => { 
     const validationConfig = { 
         formSelector: '.popup__form', 
@@ -24,7 +25,7 @@ function enableValidation({ formSelector, inputSelector, submitButtonSelector, i
             });
         }); 
 
-        clearValidation(form, inputs, submitButton, inactiveButtonClass); 
+        clearValidation(form, inputs, submitButton, inactiveButtonClass, inputErrorClass, errorClass); 
     }); 
 } 
 
@@ -71,15 +72,15 @@ function toggleSubmitButtonState(inputs, submitButton) {
     submitButton.disabled = !isFormValid; 
 } 
 
-export function clearValidation(form, inputs, submitButton, inactiveButtonClass) { 
+export function clearValidation(form, inputs, submitButton, inactiveButtonClass, inputErrorClass, errorClass) { 
     inputs.forEach(input => { 
         input.setCustomValidity(''); 
-        input.classList.remove('popup__input_type_error'); 
+        input.classList.remove(inputErrorClass);
 
         const errorElement = input.nextElementSibling; 
         errorElement.textContent = ''; 
-        errorElement.classList.remove('popup__error_visible'); 
-        input.value = ''; // Очищаем значение инпута
+        errorElement.classList.remove(errorClass);
+        input.value = ''; 
     }); 
 
     submitButton.disabled = true; 
