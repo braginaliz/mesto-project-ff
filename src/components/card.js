@@ -1,7 +1,7 @@
 //card.js
 
 import { deleteCard, likeCard, dislikeCard } from './api.js';
-import { openImagePopup } from './modal.js';
+import { openImagePopup } from '../index.js';
 
 export function createCardElement(cardData, currentUser) {
   const cardTemplate = document.querySelector('#card-template').content;

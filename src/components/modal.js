@@ -29,16 +29,4 @@ function handleModalClose(evt) {
   }
 }
 
-export function openImagePopup(link, name) {
-  const imagePopup = document.querySelector('.popup_type_image');
-  const imageElement = imagePopup.querySelector('.popup__image');
-  const captionElement = imagePopup.querySelector('.popup__caption');
-
-  imageElement.src = link;
-  imageElement.alt = name;  
-  captionElement.textContent = name;
-
-  openModal(imagePopup);  
-}
-
 export { openModal, closeModal };
