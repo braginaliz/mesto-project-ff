@@ -1,4 +1,3 @@
-// validation.js 
 document.addEventListener("DOMContentLoaded", () => { 
     const validationConfig = { 
         formSelector: '.popup__form', 
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
         inactiveButtonClass: 'popup__button_disabled', 
         inputErrorClass: 'popup__input_type_error', 
         errorClass: 'popup__error_visible' 
-    };
+    }; 
 
     enableValidation(validationConfig); 
 }); 
@@ -22,7 +21,7 @@ function enableValidation({ formSelector, inputSelector, submitButtonSelector, i
         inputs.forEach(input => { 
             input.addEventListener('input', () => { 
                 validateInput(input, inputs, submitButton, inputErrorClass, errorClass); 
-            });
+            }); 
         }); 
 
         clearValidation(form, inputs, submitButton, inactiveButtonClass, inputErrorClass, errorClass); 
@@ -58,17 +57,17 @@ function validateInput(input, inputs, submitButton, inputErrorClass, errorClass)
     } 
 
     showError(input, errorMessage, errorClass); 
-    toggleSubmitButtonState(inputs, submitButton); 
+    toggleSubmitButtonState(inputs, submitButton, inputErrorClass); 
 } 
 
 function showError(input, message, errorClass) { 
     const errorElement = input.nextElementSibling; 
-    errorElement.textContent = message;
+    errorElement.textContent = message; 
     errorElement.classList.toggle(errorClass, !!message); 
 } 
 
-function toggleSubmitButtonState(inputs, submitButton) { 
-    const isFormValid = inputs.every(input => input.checkValidity() && !input.classList.contains('popup__input_type_error')); 
+function toggleSubmitButtonState(inputs, submitButton, inputErrorClass) { 
+    const isFormValid = inputs.every(input => input.checkValidity() && !input.classList.contains(inputErrorClass)); 
     submitButton.disabled = !isFormValid; 
 } 
 
