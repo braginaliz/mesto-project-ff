@@ -1,3 +1,5 @@
+//modal.js
+
 function isEscapeKey(evt) {
   return evt.key === 'Escape';
 }
