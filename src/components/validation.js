@@ -1,99 +1,108 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const validationConfig = {
-        formSelector: '.popup__form',
-        inputSelector: '.popup__input',
-        submitButtonSelector: '.popup__button',
-        inactiveButtonClass: 'popup__button_disabled',
-        inputErrorClass: 'popup__input_type_error',
-        errorClass: 'popup__error_visible'
-    };
+document.addEventListener("DOMContentLoaded", () => { 
+    const validationConfig = { 
+        formSelector: '.popup__form', 
+        inputSelector: '.popup__input', 
+        submitButtonSelector: '.popup__button', 
+        inactiveButtonClass: 'popup__button_disabled', 
+        inputErrorClass: 'popup__input_type_error', 
+        errorClass: 'popup__error_visible' 
+    }; 
 
-    enableValidation(validationConfig);
-});
+    enableValidation(validationConfig); 
+}); 
 
-function enableValidation({ formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }) {
-    const forms = document.querySelectorAll(formSelector);
+export const validationConfig = { 
+    formSelector: '.popup__form', 
+    inputSelector: '.popup__input', 
+    submitButtonSelector: '.popup__button', 
+    inactiveButtonClass: 'popup__button_disabled', 
+    inputErrorClass: 'popup__input_type_error', 
+    errorClass: 'popup__error_visible' 
+}; 
 
-    forms.forEach(form => {
-        const inputs = Array.from(form.querySelectorAll(inputSelector));
-        const submitButton = form.querySelector(submitButtonSelector);
+function enableValidation({ formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }) { 
+    const forms = document.querySelectorAll(formSelector); 
 
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                validateInput(input, inputs, submitButton, inputErrorClass, errorClass);
-            });
-        });
+    forms.forEach(form => { 
+        const inputs = Array.from(form.querySelectorAll(inputSelector)); 
+        const submitButton = form.querySelector(submitButtonSelector); 
 
-        clearValidation(form, { inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass });
-    });
-}
+        inputs.forEach(input => { 
+            input.addEventListener('input', () => { 
+                validateInput(input, inputs, submitButton, inputErrorClass, errorClass); 
+            }); 
+        }); 
 
-function validateInput(input, inputs, submitButton, inputErrorClass, errorClass) {
-    const value = input.value.trim();
-    let errorMessage = '';
+        clearValidation(form, { formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }); 
+    }); 
+} 
 
-    const minLength = parseInt(input.dataset.minlength, 10);
-    const maxLength = parseInt(input.dataset.maxlength, 10);
-    const pattern = input.dataset.pattern;
+function validateInput(input, inputs, submitButton, inputErrorClass, errorClass) { 
+    const value = input.value.trim(); 
+    let errorMessage = ''; 
 
-    if (!value) {
-        errorMessage = input.dataset.errorRequired || 'Вы пропустили это поле.';
-    } else if (minLength && value.length < minLength) {
-        errorMessage = input.dataset.errorLength || `Минимальное количество символов: ${minLength}. Текущая длина: ${value.length}.`;
-    } else if (maxLength && value.length > maxLength) {
-        errorMessage = input.dataset.errorLength || `Максимальное количество символов: ${maxLength}. Текущая длина: ${value.length}.`;
-    } else if (input.type === 'url' && !isValidURL(value)) {
-        errorMessage = input.dataset.errorUrl || 'Введите корректный адрес сайта.';
-    } else if (pattern && !new RegExp(pattern).test(value)) {
-        errorMessage = input.dataset.errorPattern || 'Недопустимые символы.';
-    }
+    const minLength = parseInt(input.dataset.minlength, 10); 
+    const maxLength = parseInt(input.dataset.maxlength, 10); 
+    const pattern = input.dataset.pattern; 
 
-    if (errorMessage) {
-        input.setCustomValidity(errorMessage);
-        input.classList.add(inputErrorClass);
-    } else {
-        input.setCustomValidity('');
-        input.classList.remove(inputErrorClass);
-    }
+    if (!value) { 
+        errorMessage = input.dataset.errorRequired || 'Вы пропустили это поле.'; 
+    } else if (minLength && value.length < minLength) { 
+        errorMessage = input.dataset.errorLength || `Минимальное количество символов: ${minLength}. Текущая длина: ${value.length}.`; 
+    } else if (maxLength && value.length > maxLength) { 
+        errorMessage = input.dataset.errorLength || `Максимальное количество символов: ${maxLength}. Текущая длина: ${value.length}.`; 
+    } else if (input.type === 'url' && !isValidURL(value)) { 
+        errorMessage = input.dataset.errorUrl || 'Введите корректный адрес сайта.'; 
+    } else if (pattern && !new RegExp(pattern).test(value)) { 
+        errorMessage = input.dataset.errorPattern || 'Недопустимые символы.'; 
+    } 
 
-    showError(input, errorMessage, errorClass);
-    toggleSubmitButtonState(inputs, submitButton, inputErrorClass);
-}
+    if (errorMessage) { 
+        input.setCustomValidity(errorMessage); 
+        input.classList.add(inputErrorClass); 
+    } else { 
+        input.setCustomValidity(''); 
+        input.classList.remove(inputErrorClass); 
+    } 
 
-function showError(input, message, errorClass) {
-    const errorElement = input.nextElementSibling;
-    errorElement.textContent = message;
-    errorElement.classList.toggle(errorClass, !!message);
-}
+    showError(input, errorMessage, errorClass); 
+    toggleSubmitButtonState(inputs, submitButton, inputErrorClass); 
+} 
 
-function toggleSubmitButtonState(inputs, submitButton, inputErrorClass) {
-    const isFormValid = inputs.every(input => input.checkValidity() && !input.classList.contains(inputErrorClass));
-    submitButton.disabled = !isFormValid;
-}
+function showError(input, message, errorClass) { 
+    const errorElement = input.nextElementSibling; 
+    errorElement.textContent = message; 
+    errorElement.classList.toggle(errorClass, !!message); 
+} 
 
-export function clearValidation(form, { inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }) {
-    const inputs = Array.from(form.querySelectorAll(inputSelector));
-    const submitButton = form.querySelector(submitButtonSelector);
+function toggleSubmitButtonState(inputs, submitButton, inputErrorClass) { 
+    const isFormValid = inputs.every(input => input.checkValidity() && !input.classList.contains(inputErrorClass)); 
+    submitButton.disabled = !isFormValid; 
+} 
 
-    inputs.forEach(input => {
-        input.setCustomValidity('');
-        input.classList.remove(inputErrorClass);
+export function clearValidation(form, { inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass }) { 
+    const inputs = Array.from(form.querySelectorAll(inputSelector)); 
+    const submitButton = form.querySelector(submitButtonSelector); 
 
-        const errorElement = input.nextElementSibling;
-        errorElement.textContent = '';
-        errorElement.classList.remove(errorClass);
-        input.value = '';
-    });
+    inputs.forEach(input => { 
+        input.setCustomValidity(''); 
+        input.classList.remove(inputErrorClass); 
 
-    submitButton.disabled = true;
-}
+        const errorElement = input.nextElementSibling; 
+        errorElement.textContent = ''; 
+        errorElement.classList.remove(errorClass); 
+        input.value = ''; 
+    }); 
 
-// Функция для проверки URL
-function isValidURL(string) {
-    try {
-        new URL(string);
-        return true;
-    } catch (_) {
-        return false;
-    }
+    submitButton.disabled = true; 
+} 
+
+// Функция для проверки URL 
+function isValidURL(string) { 
+    try { 
+        new URL(string); 
+        return true; 
+    } catch (_) { 
+        return false; 
+    } 
 }
